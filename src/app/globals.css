@@ -3,16 +3,16 @@
 :root {
   --background: #fff5f5;
   --foreground: #1a1a1a;
-  --love-50: #fff5f5;
-  --love-100: #ffe3e3;
-  --love-200: #ffc9c9;
-  --love-300: #ffa8a8;
-  --love-400: #ff8787;
-  --love-500: #ff6b6b;
-  --love-600: #fa5252;
-  --love-700: #f03e3e;
-  --love-800: #e03131;
-  --love-900: #c92a2a;
+  --love-50: #fef2f2;
+  --love-100: #fee2e2;
+  --love-200: #fecaca;
+  --love-300: #fca5a5;
+  --love-400: #f87171;
+  --love-500: #ef4444;
+  --love-600: #dc2626;
+  --love-700: #b91c1c;
+  --love-800: #991b1b;
+  --love-900: #7f1d1d;
 }
 
 @theme inline {

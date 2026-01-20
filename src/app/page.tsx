@@ -8,14 +8,18 @@ interface FormData {
   status: RelationshipStatus;
   // Single questions
   singleChallenges: string[];
+  otherSingleChallenges: string;
   singleDesires: string;
   singleFears: string;
   singleTopics: string[];
+  otherSingleTopics: string;
   // Married questions
   marriedChallenges: string[];
+  otherMarriedChallenges: string;
   marriedYears: string;
   marriedStrengths: string;
   marriedTopics: string[];
+  otherMarriedTopics: string;
   // Common
   additionalThoughts: string;
 }
@@ -157,6 +161,54 @@ function CheckboxGroup({
   );
 }
 
+function OtherInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  const [isExpanded, setIsExpanded] = useState(value.length > 0);
+
+  return (
+    <div className="mt-3">
+      {!isExpanded ? (
+        <button
+          type="button"
+          onClick={() => setIsExpanded(true)}
+          className="w-full p-4 rounded-xl border-2 border-dashed border-[var(--love-300)] text-left transition-all duration-300 hover:border-[var(--love-400)] hover:bg-[var(--love-50)] flex items-center gap-3"
+        >
+          <div className="w-5 h-5 rounded-md border-2 border-[var(--love-300)] flex items-center justify-center">
+            <svg className="w-3 h-3 text-[var(--love-400)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <span className="text-sm text-[var(--love-500)]">Other (add your own)</span>
+        </button>
+      ) : (
+        <div className="p-4 rounded-xl border-2 border-[var(--love-400)] bg-[var(--love-50)]">
+          <div className="flex items-center gap-2 mb-2">
+            <svg className="w-4 h-4 text-[var(--love-500)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            <span className="text-sm font-medium text-[var(--love-700)]">Your own answer:</span>
+          </div>
+          <textarea
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder={placeholder}
+            rows={2}
+            className="w-full p-3 rounded-lg border border-[var(--love-200)] focus:border-[var(--love-500)] focus:outline-none transition-colors bg-white text-[var(--love-900)] placeholder:text-[var(--love-300)] resize-none text-sm"
+            autoFocus
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 function RadioGroup({
   options,
   selected,
@@ -207,13 +259,17 @@ export default function Home() {
   const [formData, setFormData] = useState<FormData>({
     status: null,
     singleChallenges: [],
+    otherSingleChallenges: "",
     singleDesires: "",
     singleFears: "",
     singleTopics: [],
+    otherSingleTopics: "",
     marriedChallenges: [],
+    otherMarriedChallenges: "",
     marriedYears: "",
     marriedStrengths: "",
     marriedTopics: [],
+    otherMarriedTopics: "",
     additionalThoughts: "",
   });
 
@@ -261,9 +317,9 @@ export default function Home() {
         return formData.status !== null;
       case 2:
         if (formData.status === "single") {
-          return formData.singleChallenges.length > 0;
+          return formData.singleChallenges.length > 0 || formData.otherSingleChallenges.trim() !== "";
         }
-        return formData.marriedChallenges.length > 0 && formData.marriedYears !== "";
+        return (formData.marriedChallenges.length > 0 || formData.otherMarriedChallenges.trim() !== "") && formData.marriedYears !== "";
       case 3:
         if (formData.status === "single") {
           return formData.singleDesires.trim() !== "" || formData.singleFears.trim() !== "";
@@ -271,9 +327,9 @@ export default function Home() {
         return formData.marriedStrengths.trim() !== "";
       case 4:
         if (formData.status === "single") {
-          return formData.singleTopics.length > 0;
+          return formData.singleTopics.length > 0 || formData.otherSingleTopics.trim() !== "";
         }
-        return formData.marriedTopics.length > 0;
+        return formData.marriedTopics.length > 0 || formData.otherMarriedTopics.trim() !== "";
       default:
         return true;
     }
@@ -383,6 +439,11 @@ export default function Home() {
                   selected={formData.singleChallenges}
                   onChange={(selected) => updateForm("singleChallenges", selected)}
                 />
+                <OtherInput
+                  value={formData.otherSingleChallenges}
+                  onChange={(value) => updateForm("otherSingleChallenges", value)}
+                  placeholder="Describe other challenges you face..."
+                />
               </div>
             )}
 
@@ -417,6 +478,11 @@ export default function Home() {
                       options={marriedChallengeOptions}
                       selected={formData.marriedChallenges}
                       onChange={(selected) => updateForm("marriedChallenges", selected)}
+                    />
+                    <OtherInput
+                      value={formData.otherMarriedChallenges}
+                      onChange={(value) => updateForm("otherMarriedChallenges", value)}
+                      placeholder="Describe other challenges you face..."
                     />
                   </div>
                 </div>
@@ -508,6 +574,11 @@ export default function Home() {
                   selected={formData.singleTopics}
                   onChange={(selected) => updateForm("singleTopics", selected)}
                 />
+                <OtherInput
+                  value={formData.otherSingleTopics}
+                  onChange={(value) => updateForm("otherSingleTopics", value)}
+                  placeholder="Suggest other topics you'd like covered..."
+                />
 
                 <div>
                   <label className="block text-sm font-medium text-[var(--love-700)] mb-2">
@@ -539,6 +610,11 @@ export default function Home() {
                   options={marriedTopicOptions}
                   selected={formData.marriedTopics}
                   onChange={(selected) => updateForm("marriedTopics", selected)}
+                />
+                <OtherInput
+                  value={formData.otherMarriedTopics}
+                  onChange={(value) => updateForm("otherMarriedTopics", value)}
+                  placeholder="Suggest other topics you'd like covered..."
                 />
 
                 <div>
